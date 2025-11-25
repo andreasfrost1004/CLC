@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS assignments;
+DROP TABLE IF EXISTS loot_events;
+DROP TABLE IF EXISTS raids;
+DROP TABLE IF EXISTS characters;
+DROP TABLE IF EXISTS guild_memberships;
+DROP TABLE IF EXISTS guilds;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS item_metadata_cache;

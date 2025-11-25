@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: clc_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: clc
+      POSTGRES_PASSWORD: clc
+      POSTGRES_DB: clc
+    ports:
+      - "5432:5432"
+    volumes:
+      - clc_pgdata:/var/lib/postgresql/data
+
+volumes:
+  clc_pgdata:
