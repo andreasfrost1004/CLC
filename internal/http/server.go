@@ -18,9 +18,6 @@ func NewServer(cfg config.Config, db *database.Database) *Server {
 	}
 }
 func (s *Server) Start() error {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("ok"))
-	})
-	return http.ListenAndServe(s.addr, mux)
+	r := s.routes()
+	return http.ListenAndServe(s.addr, r)
 }
