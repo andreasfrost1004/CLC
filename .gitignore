@@ -1,0 +1,50 @@
+# Go build artifacts
+/bin/
+/build/
+/dist/
+/out/
+/*.exe
+/*.dll
+/*.so
+/*.dylib
+
+# Go modules cache (not needed in repo)
+pkg/mod/
+pkg/sumdb/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node / React (if you add a frontend folder later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+
+# Coverage
+coverage.out
+
+# Migrations temp files (if you generate them via scripts)
+migrations/*.tmp
+
+# Database dumps
+*.sql
+*.dump
+*.backup

@@ -12,6 +12,6 @@ func (s *Server) routes() http.Handler {
 	r := chi.NewRouter()
 
 	r.Get("/hello", handlers.Hello)
-	r.Get("/item", handlers.GetItem(s.db))
+	r.Get("/item", handlers.GetItemWowhead())
 	return r
 }
