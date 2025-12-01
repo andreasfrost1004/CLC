@@ -13,7 +13,6 @@ type WowheadItemXML struct {
 	Item    struct {
 		ID      int    `xml:"id,attr"`
 		Name    string `xml:"name"`
-		Icon    string `xml:"icon"`
 		Level   int    `xml:"level"`
 		Quality struct {
 			ID    int    `xml:"id,attr"`
@@ -27,6 +26,19 @@ type WowheadItemXML struct {
 			ID    int    `xml:"id,attr"`
 			Label string `xml:",chardata"`
 		} `xml:"subclass"`
+		Icon struct {
+			DisplayID int    `xml:"displayId,attr"`
+			Icon      string `xml:",chardata"`
+		} `xml:"icon"`
+		InventorySlot struct {
+			ID    int    `xml:"id,attr"`
+			Label string `xml:",chardata"`
+		} `xml:"inventorySlot"`
+		HTMLTooltip string `xml:"htmlTooltip"`
+		JSON        string `xml:"json"`
+		JSONEquip   string `xml:"jsonEquip"`
+		JSONUse     string `xml:"jsonUse"`
+		Link        string `xml:"link"`
 	} `xml:"item"`
 }
 

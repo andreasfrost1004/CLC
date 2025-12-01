@@ -61,10 +61,12 @@ CREATE TABLE assignments (
 
 CREATE TABLE item_metadata_cache (
     item_id INT PRIMARY KEY,
-    name TEXT,
-    icon TEXT,
-    slot TEXT,
-    tier TEXT,
-    weight FLOAT,
+    name TEXT NOT NULL,
+    icon TEXT NOT NULL,
+    level INT NOT NULL,
+    quality INT NOT NULL,
+    class INT NOT NULL,
+    subclass INT NOT NULL,
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+

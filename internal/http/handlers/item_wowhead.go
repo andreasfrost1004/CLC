@@ -1,15 +1,19 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
+	"CLC/internal/database"
 	"CLC/internal/wowhead"
 )
 
-func GetItemWowhead() http.HandlerFunc {
+func GetItem(db *database.Database) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		idStr := r.URL.Query().Get("id")
 		if idStr == "" {
 			http.Error(w, "missing ?id=", http.StatusBadRequest)
@@ -22,13 +26,42 @@ func GetItemWowhead() http.HandlerFunc {
 			return
 		}
 
-		data, err := wowhead.FetchItemXML(id)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+
+		// 1. Try DB first
+		cached, err := db.GetItem(ctx, id)
+		if err == nil {
+			json.NewEncoder(w).Encode(cached)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(data)
+		// 2. Not in DB -> fetch from Wowhead
+		xmlItem, err := wowhead.FetchItemXML(id)
+		if err != nil {
+			http.Error(w, "wowhead fetch failed: "+err.Error(), 500)
+			return
+		}
+
+		// 3. Convert to DB model
+		item := database.CachedItem{
+			ItemID:   xmlItem.Item.ID,
+			Name:     xmlItem.Item.Name,
+			Icon:     xmlItem.Item.Icon.Icon, // IMPORTANT
+			Level:    xmlItem.Item.Level,
+			Quality:  xmlItem.Item.Quality.ID,
+			Class:    xmlItem.Item.Class.ID,
+			Subclass: xmlItem.Item.Subclass.ID,
+			Slot:     xmlItem.Item.InventorySlot.ID,
+		}
+
+		// 4. Insert into DB
+		if err := db.InsertItem(ctx, item); err != nil {
+			http.Error(w, "db insert failed: "+err.Error(), 500)
+			return
+		}
+
+		// 5. Return cached representation
+		json.NewEncoder(w).Encode(item)
 	}
 }
