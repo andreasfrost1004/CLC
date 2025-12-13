@@ -9,24 +9,9 @@ import (
 )
 
 type WowheadItemXML struct {
-	XMLName xml.Name `xml:"wowhead"`
-	Item    struct {
-		ID      int    `xml:"id,attr"`
-		Name    string `xml:"name"`
-		Icon    string `xml:"icon"`
-		Level   int    `xml:"level"`
-		Quality struct {
-			ID    int    `xml:"id,attr"`
-			Label string `xml:",chardata"`
-		} `xml:"quality"`
-		Class struct {
-			ID    int    `xml:"id,attr"`
-			Label string `xml:",chardata"`
-		} `xml:"class"`
-		Subclass struct {
-			ID    int    `xml:"id,attr"`
-			Label string `xml:",chardata"`
-		} `xml:"subclass"`
+	Item struct {
+		ID   int    `xml:"id,attr"`
+		Name string `xml:"name"`
 	} `xml:"item"`
 }
 
@@ -42,14 +27,14 @@ func FetchItemXML(itemID int) (*WowheadItemXML, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("wowhead returned status %s", resp.Status)
+		return nil, fmt.Errorf("wowhead returned %s", resp.Status)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("WOWHEAD XML RAW:\n", string(body))
+
 	var data WowheadItemXML
 	if err := xml.Unmarshal(body, &data); err != nil {
 		return nil, err
